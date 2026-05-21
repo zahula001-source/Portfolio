@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model PortfolioInfo {
+  id              String @id @default(cuid())
+  name            String @default("PHAM VĂN MINH")
+  title           String @default("Senior Creative & Art Director")
+  tagline         String @default("250+ Clients. 12+ Years. One obsessive visual mind.")
+  bio             String @default("I'm not just an artist in advertising—I'm the one who makes people stop scrolling, start feeling, and actually remember.")
+  email           String @default("phamvanminh@gmail.com")
+  phone           String @default("+84123456789")
+  location        String @default("Ho Chi Minh City, Vietnam")
+  behanceUrl      String @default("https://www.behance.net/phamvanminh")
+  profileImage    String @default("")    // ảnh tròn nhỏ trong circle
+  profilePosX     Int    @default(50)    // vị trí X ảnh bên trong circle (object-position %, 0-100)
+  profilePosY     Int    @default(50)    // vị trí Y ảnh bên trong circle (object-position %, 0-100)
+  profileScale    Int    @default(100)   // độ phóng to ảnh bên trong circle (% 100-300)
+  cutoutImage     String @default("")    // ảnh tách nền toàn thân nằm ngoài circle
+  featherAmount   Int    @default(30)    // độ feather ở chân ảnh tách nền (0-100)
+  cutoutScale     Int    @default(100)   // độ to ảnh tách nền (% 50-200)
+  cutoutPosY      Int    @default(0)     // vị trí Y ảnh tách nền (px -200 đến 200)
+  zaloLink        String @default("")    // link Zalo
+  zaloIcon        String @default("/uploads/zalo-icon.png")
+  zaloQr          String @default("/uploads/zalo-qr.jpg")
+  adminPassword   String @default("minh2024")
+  updatedAt       DateTime @updatedAt
+}
+
+model Experience {
+  id        String @id @default(cuid())
+  role      String
+  company   String
+  location  String
+  startDate String
+  endDate   String
+  type      String
+  order     Int     @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Client {
+  id        String @id @default(cuid())
+  name      String
+  logo      String @default("")
+  link      String @default("")   // link khi click vào client (VD: link TikTok)
+  order     Int     @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Category {
+  id          String @id @default(cuid())
+  name        String
+  slug        String
+  description String @default("")
+  icon        String @default("")
+  type        String @default("mixed")
+  order       Int     @default(0)
+  createdAt   DateTime @default(now())
+  items       MediaItem[]
+}
+
+model MediaItem {
+  id          String @id @default(cuid())
+  title       String  @default("")
+  description String  @default("")
+  type        String
+  url         String
+  thumbnail   String  @default("")
+  categoryId  String?
+  category    Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  order       Int     @default(0)
+  createdAt   DateTime @default(now())
+}
